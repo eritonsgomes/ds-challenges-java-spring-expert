@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:db_dscatalog;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;
+    username: sa
+    password:
+
+  jpa:
+    defer-datasource-initialization: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+      settings:
+        trace: false
+      web-allow-others: false
