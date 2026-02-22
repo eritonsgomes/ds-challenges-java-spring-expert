@@ -3,14 +3,16 @@ package com.devsuperior.dscatalog.services;
 import com.devsuperior.dscatalog.dtos.requests.CategoryRequestDTO;
 import com.devsuperior.dscatalog.dtos.responses.CategoryResponseDTO;
 import com.devsuperior.dscatalog.entities.CategoryEntity;
+import com.devsuperior.dscatalog.exceptions.database.DatabaseException;
 import com.devsuperior.dscatalog.exceptions.services.ResourceNotFoundException;
 import com.devsuperior.dscatalog.mappers.CategoryRequestDTOMapper;
 import com.devsuperior.dscatalog.mappers.CategoryResponseDTOMapper;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -54,5 +56,18 @@ public class CategoryService {
         entity = categoryRepository.save(entity);
 
         return categoryResponseMapper.toDTO(entity);
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public void deleteById(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+
+        try {
+            categoryRepository.deleteById(id);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseException("Falha de integridade referencial");
+        }
     }
 }
