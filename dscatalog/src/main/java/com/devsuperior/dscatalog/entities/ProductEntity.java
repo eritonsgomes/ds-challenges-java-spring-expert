@@ -33,7 +33,7 @@ public class ProductEntity {
     private String imgURL;
 
     @Setter(AccessLevel.NONE)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
         name = "tb_product_category",
         joinColumns = @JoinColumn(name = "product_id"),
@@ -53,8 +53,7 @@ public class ProductEntity {
     private Instant updatedAt;
 
     public ProductEntity(
-            Long id, String name, String description, Double price, String imgURL, Instant date, Instant createdAt,
-            Instant updatedAt
+        Long id, String name, String description, Double price, String imgURL, Instant date
     ) {
         this.id = id;
         this.name = name;
@@ -62,8 +61,6 @@ public class ProductEntity {
         this.price = price;
         this.imgURL = imgURL;
         this.date = date;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
     }
 
     @PrePersist
