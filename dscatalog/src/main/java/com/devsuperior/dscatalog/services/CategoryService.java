@@ -7,7 +7,9 @@ import com.devsuperior.dscatalog.exceptions.services.ResourceNotFoundException;
 import com.devsuperior.dscatalog.mappers.CategoryRequestDTOMapper;
 import com.devsuperior.dscatalog.mappers.CategoryResponseDTOMapper;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +40,19 @@ public class CategoryService {
     public CategoryResponseDTO create(CategoryRequestDTO request) {
         CategoryEntity entity = categoryRequestMapper.toEntity(request);
         entity = categoryRepository.save(entity);
+        return categoryResponseMapper.toDTO(entity);
+    }
+
+    @Transactional
+    public CategoryResponseDTO update(Long id, CategoryRequestDTO request) {
+        if (!categoryRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Recurso não encontrado");
+        }
+
+        CategoryEntity entity = categoryRepository.getReferenceById(id);
+        BeanUtils.copyProperties(request, entity);
+        entity = categoryRepository.save(entity);
+
         return categoryResponseMapper.toDTO(entity);
     }
 }
