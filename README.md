@@ -18,4 +18,4 @@ CRUD e Estruturação do Projeto DSCatalog
 
 **Projetos do Capítulo 1**
 
-> dscatalog
+> ds-projeto1-mod1/dscatalog
