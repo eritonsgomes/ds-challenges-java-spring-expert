@@ -1,14 +1,14 @@
 package com.devsuperior.dscatalog.resources;
 
+import com.devsuperior.dscatalog.dtos.requests.CategoryRequestDTO;
 import com.devsuperior.dscatalog.dtos.responses.CategoryResponseDTO;
 import com.devsuperior.dscatalog.services.CategoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController
@@ -28,6 +28,13 @@ public class CategoryResource {
     public ResponseEntity<CategoryResponseDTO> findById(@PathVariable Long id) {
         CategoryResponseDTO dto = categoryService.findById(id);
         return ResponseEntity.ok(dto);
+    }
+
+    @PostMapping
+    public ResponseEntity<CategoryResponseDTO> create(@RequestBody CategoryRequestDTO request) {
+        CategoryResponseDTO dto = categoryService.create(request);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(dto.id()).toUri();
+        return ResponseEntity.created(uri).body(dto);
     }
 
 }
