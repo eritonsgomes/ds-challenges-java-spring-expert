@@ -4,6 +4,8 @@ import com.devsuperior.dscatalog.dtos.requests.CategoryRequestDTO;
 import com.devsuperior.dscatalog.dtos.responses.CategoryResponseDTO;
 import com.devsuperior.dscatalog.services.CategoryService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -21,6 +23,12 @@ public class CategoryResource {
     @GetMapping
     public ResponseEntity<List<CategoryResponseDTO>> findAll() {
         List<CategoryResponseDTO> allCategories = categoryService.findAll();
+        return ResponseEntity.ok().body(allCategories);
+    }
+
+    @GetMapping("/pages")
+    public ResponseEntity<Page<CategoryResponseDTO>> findAllPages(Pageable pageable) {
+        Page<CategoryResponseDTO> allCategories = categoryService.findAllPages(pageable);
         return ResponseEntity.ok().body(allCategories);
     }
 

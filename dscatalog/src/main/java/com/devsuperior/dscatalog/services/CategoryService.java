@@ -11,6 +11,8 @@ import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +30,11 @@ public class CategoryService {
     @Transactional(readOnly = true)
     public List<CategoryResponseDTO> findAll() {
         return categoryRepository.findAll().stream().map(categoryResponseMapper::toDTO).toList();
+    }
+
+    @Transactional(readOnly = true)
+    public Page<CategoryResponseDTO> findAllPages(Pageable pageable) {
+        return categoryRepository.findAll(pageable).map(categoryResponseMapper::toDTO);
     }
 
     @Transactional(readOnly = true)
