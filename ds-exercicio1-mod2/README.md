@@ -16,10 +16,8 @@ Este repositório tem o objetivo de armazenar os Projetos, Exercícios e Desafio
 
 Testes Automatizados
 
-**Projetos do Capítulo 2**
+**Exercícios do Capítulo 2**
 
-### Exercícios do Capítulo 2
-
-> ds-projeto1-mod2/exercicio-testes-java
+> ds-exercicio1-mod2/exercicios-testes-java
 
 Acesso o exercício em: [exercicio-testes-java](https://github.com/acenelio/exercicio-testes-java)
