@@ -1,0 +1,16 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: dscatalog
+
+  profiles:
+    active: test
+
+  jpa:
+    defer-datasource-initialization: false
+    open-in-view: false
+    hibernate:
+      ddl-auto: none
+    show-sql: false
