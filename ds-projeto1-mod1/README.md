@@ -12,22 +12,10 @@ Este repositório tem o objetivo de armazenar os Projetos, Exercícios e Desafio
 
 ### Capítulo 1
 
-### Projetos do Capítulo
+## Projetos do Capítulo 1
 
 CRUD e Estruturação do Projeto DSCatalog
 
 **Projetos do Capítulo 1**
 
 > ds-projeto1-mod1/dscatalog
-
-### Capítulo 2
-
-### Projetos do Capítulo 2
-
-Testes Automatizados
-
-**Projetos do Capítulo 2**
-
-### Exercícios do Capítulo 2
-
-> ds-projeto1-mod2/exercicios-testes-java
