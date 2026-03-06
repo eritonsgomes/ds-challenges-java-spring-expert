@@ -9,6 +9,7 @@ import com.devsuperior.dscatalog.entities.ProductEntity;
 
 import java.time.Instant;
 import java.util.Collections;
+import java.util.Set;
 
 public class ProductFactory {
 
@@ -54,6 +55,19 @@ public class ProductFactory {
                 .price(800.00)
                 .imgURL("https://img.com/img.png")
                 .categories(Collections.singleton(categoryRequestDto))
+                .build();
+    }
+
+    public static ProductRequestDTO createProductRequestDtoWithCategories(Set<CategoryRequestDTO> categoryRequestDTOs) {
+        ProductRequestDTO productMock = ProductFactory.createProductRequestDto();
+
+        return ProductRequestDTO.builder()
+                .name(productMock.name())
+                .description(productMock.description())
+                .date(productMock.date())
+                .price(productMock.price())
+                .imgURL(productMock.imgURL())
+                .categories(categoryRequestDTOs)
                 .build();
     }
 

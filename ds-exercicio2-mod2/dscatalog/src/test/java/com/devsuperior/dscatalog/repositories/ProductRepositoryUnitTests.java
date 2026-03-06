@@ -11,7 +11,7 @@ import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
 import java.util.Optional;
 
 @DataJpaTest
-public class ProductRepositoryTests {
+public class ProductRepositoryUnitTests {
 
     private ProductEntity product;
     private Long existingId;

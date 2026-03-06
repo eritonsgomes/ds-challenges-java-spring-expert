@@ -28,4 +28,11 @@ public class CategoryFactory {
                 .build();
     }
 
+    public static CategoryRequestDTO createCategoryRequestDtoWithInvalidId() {
+        return CategoryRequestDTO.builder()
+                .id(13L)
+                .name("Casa")
+                .build();
+    }
+
 }

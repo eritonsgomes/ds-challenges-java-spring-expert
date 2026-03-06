@@ -23,7 +23,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -71,13 +70,13 @@ public class ProductService {
         Set<CategoryEntity> categoryEntities = new HashSet<>();
 
         for (CategoryRequestDTO categoryRequestDTO : categoryRequestDTOS) {
-            Optional<CategoryEntity> categoryFound = Optional.of(
-                categoryRepository.getReferenceById(categoryRequestDTO.id())
-            );
+            if (!categoryRepository.existsById(categoryRequestDTO.id())) {
+                throw new ResourceNotFoundException(
+                    MessageFormat.format("A Categoria {0} não foi encontrada", categoryRequestDTO.id())
+                );
+            }
 
-            CategoryEntity category = categoryFound.orElseThrow(() -> new ResourceNotFoundException(
-                MessageFormat.format("A Categoria {0} não foi encontrada", categoryRequestDTO.id()))
-            );
+            CategoryEntity category = categoryRepository.findById(categoryRequestDTO.id()).orElse(null);
 
             categoryEntities.add(category);
         }
@@ -116,5 +115,10 @@ public class ProductService {
         } catch (DataIntegrityViolationException e) {
             throw new DatabaseException("Falha de integridade referencial");
         }
+    }
+
+    @Transactional(readOnly = true)
+    public long count() {
+        return productRepository.count();
     }
 }

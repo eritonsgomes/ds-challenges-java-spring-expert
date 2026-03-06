@@ -30,7 +30,7 @@ import java.util.Optional;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ProductServiceTests {
+public class ProductServiceUnitTests {
 
     private Long existingId;
     private Long nonExistingId;
@@ -93,7 +93,8 @@ public class ProductServiceTests {
         when(productRepository.getReferenceById(existingId)).thenReturn(product);
         when(productRepository.save(any())).thenReturn(product);
         when(productResponseMapper.toDTO(product)).thenReturn(productResponseDto);
-        when(categoryRepository.getReferenceById(categoryRequestDto.id())).thenReturn(category);
+        when(categoryRepository.findById(categoryRequestDto.id())).thenReturn(Optional.ofNullable(category));
+        when(categoryRepository.existsById(categoryRequestDto.id())).thenReturn(true);
         when(productRepository.save(product)).thenReturn(product);
 
         ProductResponseDTO productResponseDTO = productService.update(existingId, productRequestDto);
