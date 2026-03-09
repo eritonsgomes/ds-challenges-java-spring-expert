@@ -10,7 +10,7 @@ import java.util.List;
 @Repository
 public interface CityRepository extends JpaRepository<City, Long> {
 
-    @Query(nativeQuery = false, value = "SELECT c FROM City c ORDER BY c.name")
+    @Query(value = "SELECT c FROM City c ORDER BY c.name")
     List<City> findAllByNameAsc();
 
 }
