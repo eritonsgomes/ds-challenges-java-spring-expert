@@ -3,12 +3,8 @@ package com.devsuperior.bds02.entities;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import com.devsuperior.bds02.dto.CityDTO;
+import jakarta.persistence.*;
 
 @Entity
 @Table(name = "tb_city")
@@ -28,6 +24,11 @@ public class City {
 	public City(Long id, String name) {
 		this.id = id;
 		this.name = name;
+	}
+
+	public City(CityDTO request) {
+		id = request.getId();
+		name = request.getName();
 	}
 
 	public Long getId() {
