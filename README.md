@@ -43,3 +43,25 @@ Testes Automatizados do Projeto DSCatalog
 Desafio TDD Event City
 
 > ds-desafio1-mod2/bds02
+
+**Projetos do Capítulo 2**
+
+Projeto DSCatalog com Testes Automatizados
+
+> ds-projeto1-mod2/dscatalog
+
+### Capítulo 3
+
+Validação e Segurança
+
+### Projetos do Capítulo 3
+
+Projeto DSCatalog com Testes Automatizados, Validação e Segurança
+
+> ds-projeto1-mod3/dscatalog
+
+**Desafios do Capítulo 3**
+
+Desafio Projeto Event City com Testes Automatizados, Validação e Segurança
+
+> ds-desafio1-mod3/bds04
