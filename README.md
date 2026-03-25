@@ -65,3 +65,13 @@ Projeto DSCatalog com Testes Automatizados, Validação e Segurança
 Desafio Projeto Event City com Testes Automatizados, Validação e Segurança
 
 > ds-desafio1-mod3/bds04
+
+### Capítulo 4
+
+Casos de Uso, Signup, Finalização
+
+### Projetos do Capítulo 4
+
+Projeto DSCatalog com Testes Automatizados, Validação e Segurança e Melhorias 
+
+> ds-projeto1-mod4/dscatalog
