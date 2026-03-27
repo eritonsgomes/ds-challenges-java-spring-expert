@@ -107,7 +107,7 @@ public class ProductControllerIntegrationTests {
         );
 
         result.andExpect(status().isOk());
-        result.andExpect(jsonPath("$").isArray());
+        result.andExpect(jsonPath("$.content").isArray());
     }
 
     @Test

@@ -9,21 +9,22 @@ import com.devsuperior.dscatalog.exceptions.database.DatabaseException;
 import com.devsuperior.dscatalog.exceptions.services.ResourceNotFoundException;
 import com.devsuperior.dscatalog.mappers.ProductRequestDTOMapper;
 import com.devsuperior.dscatalog.mappers.ProductResponseDTOMapper;
+import com.devsuperior.dscatalog.projections.ProductProjection;
 import com.devsuperior.dscatalog.repositories.CategoryRepository;
 import com.devsuperior.dscatalog.repositories.ProductRepository;
+import com.devsuperior.dscatalog.utils.ListUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.BeanUtils;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +43,50 @@ public class ProductService {
 
     @Transactional(readOnly = true)
     public Page<ProductResponseDTO> findAllPages(Pageable pageable) {
-        return productRepository.searchAllPages(pageable).map(productResponseMapper::toDTO);
+        return productRepository.findAll(pageable).map(productResponseMapper::toDTO);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDTO> findAllByNameAndCategoryIds(
+        String name, List<String> categoryIds, Pageable pageable
+    ) {
+        List<Long> categoryIdsList = new ArrayList<>();
+
+        if (Objects.nonNull(categoryIds) & !categoryIds.isEmpty()) {
+            categoryIdsList.addAll(categoryIds.stream().map(Long::valueOf).toList());
+        }
+
+        Page<ProductProjection> productProjectionsPage = productRepository
+                .searchAllByNameAndCategoryIds(categoryIdsList, name, pageable);
+        List<Long> productIdsList = productProjectionsPage.map(ProductProjection::getId).toList();
+
+        List<ProductEntity> productEntities = productRepository.searchProductsWithCategories(productIdsList);
+
+        productEntities = ListUtils
+                .orderBy(productProjectionsPage.getContent(), productEntities)
+                .stream()
+                .map(obj -> (ProductEntity) obj).toList();
+
+        List<ProductResponseDTO> productResponse = productEntities.stream().map(productResponseMapper::toDTO).toList();
+
+        return new PageImpl<>(productResponse, productProjectionsPage.getPageable(),
+                productProjectionsPage.getTotalElements());
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ProductResponseDTO> findAllByFilter(
+        String name, List<String> categoryIds, Pageable pageable
+    ) {
+        List<Long> categoryIdsList = new ArrayList<>();
+
+        if (Objects.nonNull(categoryIds) & !categoryIds.isEmpty()) {
+            categoryIdsList.addAll(categoryIds.stream().map(Long::valueOf).toList());
+        }
+
+        List<ProductEntity> productEntities = productRepository.searchProductByNameWithCategories(name, categoryIdsList, pageable);
+        List<ProductResponseDTO> productResponse = productEntities.stream().map(productResponseMapper::toDTO).toList();
+
+        return new PageImpl<>(productResponse, pageable, productEntities.size());
     }
 
     @Transactional(readOnly = true)

@@ -1,6 +1,5 @@
 package com.devsuperior.dscatalog.repositories;
 
-import com.devsuperior.dscatalog.entities.ProductEntity;
 import com.devsuperior.dscatalog.entities.UserEntity;
 import com.devsuperior.dscatalog.projections.UserDetailsProjection;
 import org.springframework.data.domain.Page;
@@ -42,6 +41,6 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
             SELECT COUNT(u) FROM UserEntity u JOIN u.roles
         """
     )
-    Page<ProductEntity> searchAllPages(Pageable pageable);
+    Page<UserEntity> searchAllPages(Pageable pageable);
 
 }

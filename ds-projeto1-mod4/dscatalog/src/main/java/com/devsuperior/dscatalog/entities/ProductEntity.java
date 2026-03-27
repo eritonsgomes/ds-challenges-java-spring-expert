@@ -15,7 +15,7 @@ import java.util.Set;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "tb_product")
-public class ProductEntity {
+public class ProductEntity implements ID<Long> {
 
     @EqualsAndHashCode.Include
     @Id

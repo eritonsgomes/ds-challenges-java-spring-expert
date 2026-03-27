@@ -23,6 +23,16 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping
+    public ResponseEntity<Page<ProductResponseDTO>> findAllByNameAndCategoryIds(
+        @RequestParam(defaultValue = "") String name,
+        @RequestParam(defaultValue = "") List<String> categoryIds,
+        Pageable pageable
+    ) {
+        Page<ProductResponseDTO> allProducts = productService.findAllByNameAndCategoryIds(name, categoryIds, pageable);
+        return ResponseEntity.ok().body(allProducts);
+    }
+
+    @GetMapping("/all")
     public ResponseEntity<List<ProductResponseDTO>> findAll() {
         List<ProductResponseDTO> allProducts = productService.findAll();
         return ResponseEntity.ok().body(allProducts);
@@ -31,6 +41,16 @@ public class ProductController {
     @GetMapping("/pages")
     public ResponseEntity<Page<ProductResponseDTO>> findAllPages(Pageable pageable) {
         Page<ProductResponseDTO> allProducts = productService.findAllPages(pageable);
+        return ResponseEntity.ok().body(allProducts);
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<ProductResponseDTO>> findAllByFilter(
+            @RequestParam(defaultValue = "") String name,
+            @RequestParam(defaultValue = "") List<String> categoryIds,
+            Pageable pageable
+    ) {
+        Page<ProductResponseDTO> allProducts = productService.findAllByFilter(name, categoryIds, pageable);
         return ResponseEntity.ok().body(allProducts);
     }
 

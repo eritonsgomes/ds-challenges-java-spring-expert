@@ -85,7 +85,7 @@ public class UserService implements UserDetailsService {
 
 	@Transactional(readOnly = true)
 	public Page<UserResponseDTO> findAllPages(Pageable pageable) {
-		return userRepository.searchAllPages(pageable).map(userResponseMapper::toDTO);
+		return userRepository.findAll(pageable).map(userResponseMapper::toDTO);
 	}
 
 	@Transactional(readOnly = true)

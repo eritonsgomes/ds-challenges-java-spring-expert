@@ -6,7 +6,7 @@ spring:
     name: dscatalog
 
   profiles:
-    active: test
+    active: ${APP_PROFILE:test}
 
   jpa:
     defer-datasource-initialization: false
