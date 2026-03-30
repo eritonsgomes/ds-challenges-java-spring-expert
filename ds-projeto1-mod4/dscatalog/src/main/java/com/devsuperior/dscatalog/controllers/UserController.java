@@ -1,7 +1,8 @@
 package com.devsuperior.dscatalog.controllers;
 
 import com.devsuperior.dscatalog.constants.RoleConstants;
-import com.devsuperior.dscatalog.dtos.requests.UserRequestDTO;
+import com.devsuperior.dscatalog.dtos.requests.CreateUserRequestDTO;
+import com.devsuperior.dscatalog.dtos.requests.UpdateUserRequestDTO;
 import com.devsuperior.dscatalog.dtos.responses.UserResponseDTO;
 import com.devsuperior.dscatalog.services.UserService;
 import jakarta.validation.Valid;
@@ -43,14 +44,14 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody CreateUserRequestDTO request) {
         UserResponseDTO dto = userService.create(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(dto.id()).toUri();
         return ResponseEntity.created(uri).body(dto);
     }
 
     @PutMapping(value = "/{id}")
-    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UserRequestDTO request) {
+    public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UpdateUserRequestDTO request) {
         UserResponseDTO dto = userService.update(id, request);
         return ResponseEntity.ok().body(dto);
     }

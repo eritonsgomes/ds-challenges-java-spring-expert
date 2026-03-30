@@ -1,14 +1,16 @@
 package com.devsuperior.dscatalog.services;
 
 
+import com.devsuperior.dscatalog.constants.RoleConstants;
+import com.devsuperior.dscatalog.dtos.requests.CreateUserRequestDTO;
 import com.devsuperior.dscatalog.dtos.requests.RoleRequestDTO;
-import com.devsuperior.dscatalog.dtos.requests.UserRequestDTO;
+import com.devsuperior.dscatalog.dtos.requests.UpdateUserRequestDTO;
 import com.devsuperior.dscatalog.dtos.responses.UserResponseDTO;
 import com.devsuperior.dscatalog.entities.RoleEntity;
 import com.devsuperior.dscatalog.entities.UserEntity;
 import com.devsuperior.dscatalog.exceptions.database.DatabaseException;
 import com.devsuperior.dscatalog.exceptions.services.ResourceNotFoundException;
-import com.devsuperior.dscatalog.mappers.UserRequestDTOMapper;
+import com.devsuperior.dscatalog.mappers.CreateUserRequestDTOMapper;
 import com.devsuperior.dscatalog.mappers.UserResponseDTOMapper;
 import com.devsuperior.dscatalog.projections.UserDetailsProjection;
 import com.devsuperior.dscatalog.repositories.RoleRepository;
@@ -29,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.text.MessageFormat;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -37,45 +40,29 @@ public class UserService implements UserDetailsService {
 
 	private final UserRepository userRepository;
 	private final UserResponseDTOMapper userResponseMapper;
-	private final UserRequestDTOMapper userRequestMapper;
+	private final CreateUserRequestDTOMapper createUserRequestMapper;
 
 	private final RoleRepository roleRepository;
 
 	private final PasswordEncoder passwordEncoder;
 
 	@Transactional
-	public UserResponseDTO create(UserRequestDTO request) {
-		UserEntity entity = userRequestMapper.toEntity(request);
+	public UserResponseDTO create(CreateUserRequestDTO request) {
+		UserEntity entity = createUserRequestMapper.toEntity(request);
 
-		entity.setPassword(passwordEncoder.encode(request.password()));
+		entity.setPassword(passwordEncoder.encode(request.getPassword()));
 
-		addRolesToUserEntity(request, entity);
+		addRoleOperatorToUserEntity(entity);
 
 		entity = userRepository.save(entity);
 
 		return userResponseMapper.toDTO(entity);
 	}
 
-	@Transactional(readOnly = true)
-	public void addRolesToUserEntity(UserRequestDTO request, UserEntity entity) {
-		Set<RoleRequestDTO> requestRoles = request.roles();
-		Set<RoleEntity> roleEntities = new HashSet<>();
+	private void addRoleOperatorToUserEntity(UserEntity entity) {
+		Optional<RoleEntity> roleOptional = roleRepository.findByAuthority(RoleConstants.ROLE_OPERATOR);
 
-		for (RoleRequestDTO requestDTO : requestRoles) {
-			if (!roleRepository.existsById(requestDTO.id())) {
-				throw new ResourceNotFoundException(
-					MessageFormat.format("O Role {0} não foi encontrado", requestDTO.id())
-				);
-			}
-
-			RoleEntity role = roleRepository.findById(requestDTO.id()).orElse(null);
-
-			roleEntities.add(role);
-		}
-
-		for (RoleEntity role : roleEntities) {
-			entity.getRoles().add(role);
-		}
+        roleOptional.ifPresent(role -> entity.getRoles().add(role));
 	}
 
 	@Transactional(readOnly = true)
@@ -98,20 +85,22 @@ public class UserService implements UserDetailsService {
 
 	@Override
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-		
+
 		List<UserDetailsProjection> result = userRepository.searchUserAndRolesByEmail(username);
 
-		if (result.size() == 0) {
+		if (result.isEmpty()) {
 			throw new UsernameNotFoundException("Email not found");
 		}
-		
+
 		UserEntity user = new UserEntity();
-		user.setEmail(result.get(0).getUsername());
-		user.setPassword(result.get(0).getPassword());
+
+		user.setEmail(result.getFirst().getUsername());
+		user.setPassword(result.getFirst().getPassword());
+
 		for (UserDetailsProjection projection : result) {
 			user.addRole(new RoleEntity(projection.getRoleId(), projection.getAuthority()));
 		}
-		
+
 		return user;
 	}
 
@@ -121,7 +110,7 @@ public class UserService implements UserDetailsService {
 	}
 
 	@Transactional
-	public UserResponseDTO update(Long id, UserRequestDTO request) {
+	public UserResponseDTO update(Long id, UpdateUserRequestDTO request) {
 		if (!userRepository.existsById(id)) {
 			throw new ResourceNotFoundException("Recurso não encontrado");
 		}
@@ -136,6 +125,27 @@ public class UserService implements UserDetailsService {
 		entity = userRepository.save(entity);
 
 		return userResponseMapper.toDTO(entity);
+	}
+
+	private void addRolesToUserEntity(UpdateUserRequestDTO request, UserEntity entity) {
+		Set<RoleRequestDTO> requestRoles = request.getRoles() != null ? request.getRoles() : new HashSet<>();
+		Set<RoleEntity> roleEntities = new HashSet<>();
+
+		for (RoleRequestDTO requestDTO : requestRoles) {
+			if (!roleRepository.existsById(requestDTO.id())) {
+				throw new ResourceNotFoundException(
+						MessageFormat.format("O Role {0} não foi encontrado", requestDTO.id())
+				);
+			}
+
+			RoleEntity role = roleRepository.findById(requestDTO.id()).orElse(null);
+
+			roleEntities.add(role);
+		}
+
+		for (RoleEntity role : roleEntities) {
+			entity.getRoles().add(role);
+		}
 	}
 
 	@Transactional(propagation = Propagation.SUPPORTS)

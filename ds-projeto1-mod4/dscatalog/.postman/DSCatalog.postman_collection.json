@@ -308,20 +308,13 @@
               "name": "Create (Admin)",
               "request": {
                 "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "{{token}}",
-                      "type": "string"
-                    }
-                  ]
+                  "type": "noauth"
                 },
                 "method": "POST",
                 "header": [],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"firstName\": \"Alex A.\",\r\n    \"lastName\": \"Brown\",\r\n    \"email\": \"alexab@gmail.com\",\r\n    \"roles\": [\r\n        {\r\n            \"id\": 1,\r\n            \"authority\": \"ROLE_OPERATOR\"\r\n        }\r\n    ]\r\n}",
+                  "raw": "{\r\n    \"firstName\": \"System\",\r\n    \"lastName\": \"User\",\r\n    \"email\": \"systemuser@gmail.com\",\r\n    \"phone\": \"33933333333\",\r\n    \"birthDate\": \"30/03/2026\",\r\n    \"password\": \"12345678\"\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -597,7 +590,9 @@
                   "   postman.setEnvironmentVariable('token', json.access_token);\r",
                   "} "
                 ],
-                "type": "text/javascript"
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
               }
             }
           ],

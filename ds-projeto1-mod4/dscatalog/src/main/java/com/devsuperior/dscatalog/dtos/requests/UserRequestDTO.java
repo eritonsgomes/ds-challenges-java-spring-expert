@@ -1,29 +1,32 @@
 package com.devsuperior.dscatalog.dtos.requests;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
+import lombok.*;
 
-import java.util.Set;
+import java.time.LocalDate;
 
-@Builder
-public record UserRequestDTO(
-    Long id,
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+public abstract class UserRequestDTO {
+
+    protected Long id;
     @NotBlank(message = "{validation.constraints.not-blank}")
     @Size(min = 1, max = 100, message = "{validation.constraints.size}")
-    String firstName,
+    protected String firstName;
     @NotBlank(message = "{validation.constraints.not-blank}")
     @Size(min = 1, max = 50, message = "{validation.constraints.size}")
-    String lastName,
+    protected String lastName;
+    @Size(min = 9, max = 11, message = "{validation.constraints.size}")
+    protected String phone;
+    @JsonFormat(shape =  JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    protected LocalDate birthDate;
     @NotBlank(message = "{validation.constraints.not-blank}")
     @Email(message = "{validation.constraints.email}")
-    String email,
-    @Size(min = 1, max = 100)
-    String password,
-    @NotEmpty(message = "{validation.constraints.not-empty}")
-    Set<RoleRequestDTO> roles
-) {
+    protected String email;
 
 }

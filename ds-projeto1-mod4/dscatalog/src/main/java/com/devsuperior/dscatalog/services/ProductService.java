@@ -108,7 +108,6 @@ public class ProductService {
         return productResponseMapper.toDTO(entity);
     }
 
-    @Transactional(readOnly = true)
     private void addCategoriesToProductEntity(ProductRequestDTO request, ProductEntity entity) {
         Set<CategoryRequestDTO> categoryRequestDTOS =
                 request.categories() != null
