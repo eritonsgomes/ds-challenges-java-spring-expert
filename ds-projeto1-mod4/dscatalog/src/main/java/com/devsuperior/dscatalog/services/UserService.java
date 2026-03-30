@@ -46,6 +46,8 @@ public class UserService implements UserDetailsService {
 
 	private final PasswordEncoder passwordEncoder;
 
+	private final AuthService authService;
+
 	@Transactional
 	public UserResponseDTO create(CreateUserRequestDTO request) {
 		UserEntity entity = createUserRequestMapper.toEntity(request);
@@ -94,6 +96,11 @@ public class UserService implements UserDetailsService {
 
 		UserEntity user = new UserEntity();
 
+		user.setId(result.getFirst().getUserId());
+		user.setFirstName(result.getFirst().getFirstName());
+		user.setLastName(result.getFirst().getLastName());
+		user.setPhone(result.getFirst().getPhone());
+		user.setBirthDate(result.getFirst().getBirthDate());
 		user.setEmail(result.getFirst().getUsername());
 		user.setPassword(result.getFirst().getPassword());
 
@@ -161,4 +168,9 @@ public class UserService implements UserDetailsService {
 		}
 	}
 
+	@Transactional(readOnly = true)
+	public UserResponseDTO findMe() {
+		UserEntity user = authService.getUserAuthenticated();
+		return userResponseMapper.toDTO(user);
+	}
 }

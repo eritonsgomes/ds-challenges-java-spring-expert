@@ -20,6 +20,26 @@ spring:
     encoding: UTF-8
     fallback-to-system-locale: false
 
+  mail:
+    host: ${EMAIL_HOST:smtp.gmail.com}
+    port: ${EMAIL_PORT:587}
+    username: ${EMAIL_USERNAME:test@gmail.com}
+    password: ${EMAIL_PASSWORD:123456}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+      sender:
+        timeout: 60
+
+email:
+  password-recovery:
+    token:
+      minutes: ${PASSWORD_RECOVERY_TOKEN_MINUTES:30}
+    uri: ${PASSWORD_RECOVERY_URI:http://localhost:5173/password/recovery}
+
 security:
   client-id: ${CLIENT_ID:dscatalog}
   client-secret: ${CLIENT_SECRET:123456}

@@ -20,30 +20,33 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "/users")
 @RequiredArgsConstructor
-@PreAuthorize("hasAnyRole(" + RoleConstants.ROLE_ADMIN + ")")
 public class UserController {
 
     private final UserService userService;
 
     @GetMapping
+    @PreAuthorize("hasAnyRole(" + RoleConstants.ROLE_ADMIN + ")")
     public ResponseEntity<List<UserResponseDTO>> findAll() {
         List<UserResponseDTO> users = userService.findAll();
         return ResponseEntity.ok().body(users);
     }
 
     @GetMapping("/pages")
+    @PreAuthorize("hasAnyRole(" + RoleConstants.ROLE_ADMIN + ")")
     public ResponseEntity<Page<UserResponseDTO>> findAllPages(Pageable pageable) {
         Page<UserResponseDTO> users = userService.findAllPages(pageable);
         return ResponseEntity.ok().body(users);
     }
 
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole(" + RoleConstants.ROLE_ADMIN + ")")
     public ResponseEntity<UserResponseDTO> findById(@PathVariable Long id) {
         UserResponseDTO dto = userService.findById(id);
         return ResponseEntity.ok(dto);
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole(" + RoleConstants.ROLE_ADMIN + ")")
     public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody CreateUserRequestDTO request) {
         UserResponseDTO dto = userService.create(request);
         URI uri = ServletUriComponentsBuilder.fromCurrentRequestUri().path("/{id}").buildAndExpand(dto.id()).toUri();
@@ -51,15 +54,24 @@ public class UserController {
     }
 
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole(" + RoleConstants.ROLE_ADMIN + ")")
     public ResponseEntity<UserResponseDTO> update(@PathVariable Long id, @Valid @RequestBody UpdateUserRequestDTO request) {
         UserResponseDTO dto = userService.update(id, request);
         return ResponseEntity.ok().body(dto);
     }
 
     @DeleteMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole(" + RoleConstants.ROLE_ADMIN + ")")
     public ResponseEntity<Void> deleteById(@PathVariable Long id) {
         userService.deleteById(id);
         return ResponseEntity.noContent().build();
+    }
+
+    @GetMapping(value = "/me")
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<UserResponseDTO> findMe() {
+        UserResponseDTO dto = userService.findMe();
+        return ResponseEntity.ok(dto);
     }
 
 }

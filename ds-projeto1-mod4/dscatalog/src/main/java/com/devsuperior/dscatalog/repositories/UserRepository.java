@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
@@ -32,6 +33,13 @@ public interface UserRepository extends JpaRepository<UserEntity, Long> {
         """
     )
     List<UserEntity> searchAll();
+
+    @Query(
+        value = """
+            SELECT u FROM UserEntity u JOIN FETCH u.roles WHERE u.email = :email
+        """
+    )
+    Optional<UserEntity> findByEmail(String email);
 
     @Query(
         value = """

@@ -1,16 +1,23 @@
 package com.devsuperior.dscatalog.services;
 
+import com.devsuperior.dscatalog.dtos.requests.PasswordRecoveryRequestDTO;
+import com.devsuperior.dscatalog.dtos.requests.PasswordResetRequestDTO;
+import com.devsuperior.dscatalog.entities.PasswordRecoveryEntity;
 import com.devsuperior.dscatalog.entities.RoleEntity;
 import com.devsuperior.dscatalog.entities.UserEntity;
+import com.devsuperior.dscatalog.exceptions.services.ResourceNotFoundException;
 import com.devsuperior.dscatalog.projections.UserDetailsProjection;
 import com.devsuperior.dscatalog.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
 
@@ -19,6 +26,8 @@ import java.util.Objects;
 public class AuthService {
 
     private final UserRepository userRepository;
+    private final PasswordRecoveryService passwordRecoveryService;
+    private final PasswordEncoder passwordEncoder;
 
     protected UserEntity getUserAuthenticated() throws UsernameNotFoundException {
         try {
@@ -42,6 +51,11 @@ public class AuthService {
 
                 UserEntity user = new UserEntity();
 
+                user.setId(userProjections.getFirst().getUserId());
+                user.setFirstName(userProjections.getFirst().getFirstName());
+                user.setLastName(userProjections.getLast().getLastName());
+                user.setPhone(userProjections.getFirst().getPhone());
+                user.setBirthDate(userProjections.getFirst().getBirthDate());
                 user.setEmail(userProjections.getFirst().getUsername());
                 user.setPassword(userProjections.getFirst().getPassword());
 
@@ -57,4 +71,31 @@ public class AuthService {
 
         return null;
     }
+
+    @Transactional
+    public void recoverPassword(PasswordRecoveryRequestDTO request) {
+        userRepository.findByEmail(request.email()).orElseThrow(
+            () -> new UsernameNotFoundException("E-mail não encontrado")
+        );
+
+        PasswordRecoveryEntity passwordRecovery = passwordRecoveryService.create(request.email());
+
+        passwordRecoveryService.sendPasswordRecoveryEmail(passwordRecovery);
+    }
+
+    @Transactional
+    public void resetPassword(PasswordResetRequestDTO request) {
+        List<PasswordRecoveryEntity> tokens = passwordRecoveryService.searchValidTokens(request.token(), Instant.now());
+
+        UserEntity user = userRepository
+            .findByEmail(tokens.getFirst().getEmail())
+            .orElseThrow(
+                () -> new ResourceNotFoundException("Token inválido")
+            );
+
+        user.setPassword(passwordEncoder.encode(request.password()));
+
+        userRepository.save(user);
+    }
+
 }

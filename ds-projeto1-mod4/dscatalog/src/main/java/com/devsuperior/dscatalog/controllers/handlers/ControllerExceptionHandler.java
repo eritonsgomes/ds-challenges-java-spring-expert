@@ -4,6 +4,7 @@ package com.devsuperior.dscatalog.controllers.handlers;
 import com.devsuperior.dscatalog.errors.CustomError;
 import com.devsuperior.dscatalog.errors.ValidationError;
 import com.devsuperior.dscatalog.exceptions.database.DatabaseException;
+import com.devsuperior.dscatalog.exceptions.services.EmailSenderException;
 import com.devsuperior.dscatalog.exceptions.services.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<CustomError> handleResourceNotFound(ResourceNotFoundException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.NOT_FOUND;
+
         CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(status).body(err);
@@ -29,6 +31,7 @@ public class ControllerExceptionHandler {
     @ExceptionHandler(DatabaseException.class)
     public ResponseEntity<CustomError> database(DatabaseException e, HttpServletRequest request) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
+
         CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(status).body(err);
@@ -42,6 +45,15 @@ public class ControllerExceptionHandler {
         for (FieldError f : e.getBindingResult().getFieldErrors()) {
             err.addError(f.getField(), f.getDefaultMessage());
         }
+
+        return ResponseEntity.status(status).body(err);
+    }
+
+    @ExceptionHandler(EmailSenderException.class)
+    public ResponseEntity<CustomError> database(EmailSenderException e, HttpServletRequest request) {
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+        CustomError err = new CustomError(Instant.now(), status.value(), e.getMessage(), request.getRequestURI());
 
         return ResponseEntity.status(status).body(err);
     }
