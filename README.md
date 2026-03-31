@@ -75,3 +75,9 @@ Casos de Uso, Signup, Finalização
 Projeto DSCatalog com Testes Automatizados, Validação e Segurança e Melhorias 
 
 > ds-projeto1-mod4/dscatalog
+
+**Desafios do Capítulo 4**
+
+Desafio Projeto MovieFlix com Casos de Uso, Testes Automatizados, Validação e Segurança
+
+> ds-desafio1-mod4/movieflix
