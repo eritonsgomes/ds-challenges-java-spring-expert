@@ -81,3 +81,15 @@ Projeto DSCatalog com Testes Automatizados, Validação e Segurança e Melhorias
 Desafio Projeto MovieFlix com Casos de Uso, Testes Automatizados, Validação e Segurança
 
 > ds-desafio1-mod4/movieflix
+
+### Capítulo 5
+
+### Projetos do Capítulo 5
+
+Cobertura de Código com Jacoco
+
+**Exercícios do Capítulo 5**
+
+POC Testes Unitários do Projeto DSCommerce utilizando @Mock, @Spy e @InjectMocks
+
+> ds-exercicio1-mod5/poc-dscommerce-mock-spy-injectmocks
