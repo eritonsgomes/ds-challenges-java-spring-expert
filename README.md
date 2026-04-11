@@ -93,3 +93,7 @@ Cobertura de Código com Jacoco
 POC Testes Unitários do Projeto DSCommerce utilizando @Mock, @Spy e @InjectMocks
 
 > ds-exercicio1-mod5/poc-dscommerce-mock-spy-injectmocks
+
+Projeto DSCommerce com Jacoco
+
+> ds-exercicio2-mod5/dscommerce
