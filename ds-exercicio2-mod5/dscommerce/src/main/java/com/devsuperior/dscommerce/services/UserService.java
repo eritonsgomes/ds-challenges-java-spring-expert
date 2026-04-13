@@ -5,7 +5,6 @@ import com.devsuperior.dscommerce.entities.Role;
 import com.devsuperior.dscommerce.entities.User;
 import com.devsuperior.dscommerce.projections.UserDetailsProjection;
 import com.devsuperior.dscommerce.repositories.UserRepository;
-import com.devsuperior.dscommerce.utils.SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -21,6 +20,9 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private UserRepository repository;
+
+    @Autowired
+    private AuthService authService;
 
     @Override
     @Transactional(readOnly = true)
@@ -44,7 +46,7 @@ public class UserService implements UserDetailsService {
 
     @Transactional(readOnly = true)
     public User getAuthenticatedUser() {
-        String userName = SecurityUtil.getUserName();
+        String userName = authService.getAuthenticatedUserName();
         Optional<User> user = repository.findByEmail(userName);
 
         if (user.isEmpty()) {
@@ -55,8 +57,8 @@ public class UserService implements UserDetailsService {
     }
 
     @Transactional(readOnly = true)
-    public UserDTO getLoggedUser() {
-        String userName = SecurityUtil.getUserName();
+    public UserDTO getMe() {
+        String userName = authService.getAuthenticatedUserName();
         Optional<User> user = repository.findByEmail(userName);
 
         if (user.isEmpty()) {

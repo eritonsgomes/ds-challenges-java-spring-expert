@@ -17,7 +17,7 @@ public class UserControllerImpl implements UserController {
 
     @Override
     public ResponseEntity<UserDTO> getLoggedUser() {
-        return ResponseEntity.ok(userService.getLoggedUser());
+        return ResponseEntity.ok(userService.getMe());
     }
 
 }

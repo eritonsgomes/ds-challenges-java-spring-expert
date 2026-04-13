@@ -18,8 +18,12 @@
 
 	<properties>
 		<java.version>23</java.version>
-		<org.mapstruct.version>1.6.3</org.mapstruct.version>
-		<maven-compiler-plugin.version>3.13.0</maven-compiler-plugin.version>
+		<mapstruct.version>1.6.3</mapstruct.version>
+		<maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
+		<maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
+		<maven-surefire-junit5-tree-reporter.version>1.4.0</maven-surefire-junit5-tree-reporter.version>
+		<mockito-core.version>5.23.0</mockito-core.version>
+		<byte-buddy.version>1.18.8</byte-buddy.version>
 	</properties>
 
 	<dependencies>
@@ -62,7 +66,7 @@
 		<dependency>
 			<groupId>org.mapstruct</groupId>
 			<artifactId>mapstruct</artifactId>
-			<version>${org.mapstruct.version}</version>
+			<version>${mapstruct.version}</version>
 		</dependency>
 
 		<dependency>
@@ -70,6 +74,20 @@
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
 			<optional>true</optional>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>${mockito-core.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>${byte-buddy.version}</version>
+			<scope>compile</scope>
 		</dependency>
 
 		<dependency>
@@ -103,7 +121,7 @@
 						<path>
 							<groupId>org.mapstruct</groupId>
 							<artifactId>mapstruct-processor</artifactId>
-							<version>${org.mapstruct.version}</version>
+							<version>${mapstruct.version}</version>
 						</path>
 					</annotationProcessorPaths>
 				</configuration>
@@ -116,10 +134,13 @@
 					<dependency>
 						<groupId>me.fabriciorby</groupId>
 						<artifactId>maven-surefire-junit5-tree-reporter</artifactId>
-						<version>1.4.0</version>
+						<version>${maven-surefire-junit5-tree-reporter.version}</version>
 					</dependency>
 				</dependencies>
 				<configuration>
+					<argLine>
+						@{argLine} -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
+					</argLine>
 					<reportFormat>plain</reportFormat>
 					<consoleOutputReporter>
 						<disable>true</disable>
