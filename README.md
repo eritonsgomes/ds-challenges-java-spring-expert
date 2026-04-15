@@ -97,3 +97,9 @@ POC Testes Unitários do Projeto DSCommerce utilizando @Mock, @Spy e @InjectMock
 Projeto DSCommerce com Jacoco
 
 > ds-exercicio2-mod5/dscommerce
+
+**Desafios do Capítulo 5**
+
+Desafio Projeto MovieFlix com Cobertura de Testes
+
+> ds-desafio1-mod5/movieflix
